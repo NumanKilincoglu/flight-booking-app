@@ -1,5 +1,4 @@
 import '../../assets/style/Navbar.css';
-import { Link } from "react-router-dom";
 import Logo from '../../assets/images/logo.png';
 import Avatar from '../../assets/images/profile.png';
 import Discover from '../../assets/images/earth.png';
@@ -10,6 +9,7 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="navbar-logo">
                 <img src={Logo} alt="Logo" />
+                <h4>Plane Scape</h4>
             </div>
             <div className="navbar-menu">
                 <a href="/deals">

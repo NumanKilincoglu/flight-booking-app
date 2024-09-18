@@ -15,7 +15,7 @@ body {
 }
 
 div#root {
-  min-height: 100%; /* remove this line to see div.app is no more 100% height */
+  min-height: 100%;
 
 }
 
@@ -26,9 +26,29 @@ code {
 
 .App {
   height: 100%;
-  padding: 2rem 1.5rem;
 }
 
 .w100 {
   width: 100%;
+}
+
+.f {
+  display: flex;
+}
+
+.g1 {
+  gap: 0.1rem;
+}
+
+.g5 {
+  gap: 0.5rem;
+}
+
+.dropdown-arrow {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-top: 2px solid #007bff;
+  border-left: 2px solid #007bff;
+  transform: rotate(-135deg);
 }
