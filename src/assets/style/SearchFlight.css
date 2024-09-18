@@ -1,0 +1,111 @@
+.book-your-flights {
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.search-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trip-type {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.trip-type .left,
+.right,
+.show-flight {
+  padding: 1rem 1.5rem;
+  background-color: #4c0197;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  font-weight: bold;
+}
+
+.show-flight {
+   width: 200px;
+  }
+
+.trip-type .left {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.trip-type .right {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: #e8e0ea;
+  color: #4c0197;
+}
+
+.book-your-flights h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+  text-align: start;
+}
+
+.search-wrap {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.location-wrap,
+.date-wrap {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #555;
+}
+
+input[type="text"],
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  padding-left:20px;
+  height: 44px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus {
+  border-color: #4c0197;
+  outline: none;
+}
+
+.left-radius {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.right-radius {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.location {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
