@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../assets/style/BookFlightPage.css';
 import Card from '../components/booking/Card';
 import SearchFlight from '../components/booking/SearchFlight.jsx';
@@ -7,6 +7,8 @@ import FlightFilters from '../components/booking/FlightFilters';
 import Rental from '../assets/images/car.jpg'
 import Hotel from '../assets/images/hotel.jpg'
 import Travel from '../assets/images/travel.jpg';
+
+import FlightService from '../services/FlightService';
 
 const flights = [
     {
@@ -63,7 +65,27 @@ const airlines = [
     { value: 'southwest', label: 'Southwest' }
 ];
 
+
+
 const BookFlight = () => {
+
+    const [newFlights, setFlights] = useState([]);
+
+    useEffect(() => {
+        const fetchFlights = async () => {
+            try {
+                const flightData = await FlightService.getFlights();
+                setFlights(flightData);
+            } catch (error) {
+                console.error('Error fetching flights:', error);
+            }
+        };
+
+        fetchFlights();
+    }, []);
+
+    console.log(newFlights);
+
     return (
         <div className="book-flight-page">
             <div className="left-section">
