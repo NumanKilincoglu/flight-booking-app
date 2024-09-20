@@ -1,7 +1,18 @@
 import React from 'react';
 import '../../assets/style/FlightFilters.css';
 
-const FlightFilters = ({ sortOptions, arrivalTimes, stopsOptions, airlines }) => {
+const FlightFilters = ({ sortOptions, arrivalTimes, stopsOptions, airlines, airlineLoadMore, onAirlineSelect }) => {
+
+    const handleLoadMoreAirlines = () => {
+        airlineLoadMore();
+    };
+
+    const handleAirlineChange = (event) => {
+        const selectedIata = event.target.value;
+        console.log(selectedIata,"-->")
+        onAirlineSelect(selectedIata);
+    };
+
     return (
         <div className="flight-filters">
             <div className="filter-section">
@@ -34,12 +45,27 @@ const FlightFilters = ({ sortOptions, arrivalTimes, stopsOptions, airlines }) =>
             </div>
             <div className="filter-section">
                 <h4>Airlines</h4>
-                {airlines.map(airline => (
-                    <label key={airline.value} className="radio-label">
-                        <input type="radio" name="airlines" value={airline.value} />
-                        {airline.label}
-                    </label>
-                ))}
+                <div className='filter-section-scroll'>
+                    {airlines.length > 0 ? (
+                        airlines.map((airline, index) => (
+                            <label key={`${airline.iata}-${index}`} className="radio-label">
+                                <input
+                                    type="radio"
+                                    name="airlines"
+                                    value={airline.iata}
+                                    onChange={handleAirlineChange}
+                                />
+                                {airline.publicName}
+                            </label>
+                        ))
+                    ) : (
+                        <div>No airlines available</div>
+                    )}
+                </div>
+
+                <button className='load-more' onClick={handleLoadMoreAirlines}>
+                    Load More
+                </button>
             </div>
         </div>
     );

@@ -21,13 +21,13 @@ const Navbar = () => {
                     Deals
 
                 </a>
-                <a href="/discover">
+                <a href="/flight-history">
                     <img
                         src={Discover}
                         alt="User Avatar"
                         className="nav-icon"
                     />
-                    Discover
+                    My Flights
                 </a>
                 <div className="navbar-user">
                     <img

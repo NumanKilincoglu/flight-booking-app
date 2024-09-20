@@ -10,30 +10,6 @@ import Travel from '../assets/images/travel.jpg';
 
 import FlightService from '../services/FlightService';
 
-const flights = [
-    {
-        location: 'New York',
-        destination: 'Los Angeles',
-        departure: { date: '2024-09-20', time: '10:00 AM', airport: 'JFK' },
-        airline: 'American Airlines',
-        duration: '6h 30m',
-        arrival: { date: '2024-09-20', time: '1:30 PM', airport: 'LAX' },
-        price: '$250',
-        travelType: 'One-way'
-    },
-    {
-        location: 'Chicago',
-        destination: 'San Francisco',
-        departure: { date: '2024-09-22', time: '2:00 PM', airport: 'ORD' },
-        airline: 'Delta',
-        duration: '4h 15m',
-        arrival: { date: '2024-09-22', time: '4:15 PM', airport: 'SFO' },
-        price: '$180',
-        travelType: 'Round-trip'
-    }
-    // Daha fazla veri ekleyebilirsiniz
-];
-
 const cards = [
     { imgSrc: Rental, title: 'CAR RENTALS' },
     { imgSrc: Hotel, title: 'HOTELS' },
@@ -58,59 +34,113 @@ const stopsOptions = [
     { value: '2-stops', label: '2 Stops' }
 ];
 
-const airlines = [
-    { value: 'american-airlines', label: 'American Airlines' },
-    { value: 'delta', label: 'Delta' },
-    { value: 'united', label: 'United' },
-    { value: 'southwest', label: 'Southwest' }
-];
-
-
-
 const BookFlight = () => {
-
     const [newFlights, setFlights] = useState([]);
+    const [airLines, setAirLines] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [selectedAirline, setSelectedAirline] = useState(null);
+    const [filters, setFilters] = useState({
+        from: '',
+        to: '',
+        depart: '',
+        arrival: '',
+        iataCode: ''
+    });
+
+    const searchFligths = async () => {
+
+        try {
+            setLoading(true);
+            const flightData = await FlightService.getFlights({
+                params: {
+                    from: filters.from,
+                    to: filters.to,
+                    depart: filters.depart,
+                    arrival: filters.arrival,
+                    iataCode: filters.iataCode
+                }
+            });
+            console.log(filters);
+            setFlights(flightData);
+        } catch (error) {
+            console.error('Error fetching flights:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleShowFlights = async (filter) => {
+        setFilters(filter);
+    };
 
     useEffect(() => {
-        const fetchFlights = async () => {
+        if (filters) {
+            searchFligths();
+        }
+    }, [filters]);
+
+    useEffect(() => {
+        const fetchAirlines = async () => {
             try {
-                const flightData = await FlightService.getFlights();
-                setFlights(flightData);
+
+                const airlineData = await FlightService.getAirlines({
+                    page: page,
+                    limit: 10,
+                });
+                setAirLines((prev) => [...prev, ...airlineData]);
             } catch (error) {
-                console.error('Error fetching flights:', error);
+                console.error('Error fetching airlines:', error);
             }
         };
 
-        fetchFlights();
-    }, []);
+        fetchAirlines();
+    }, [page]);
 
-    console.log(newFlights);
+    const handleLoadMoreAirlines = () => {
+        setPage((prev) => prev + 1);
+    };
+
+    const handleAirlineSelect = (airlineCode) => {
+        setSelectedAirline(airlineCode);
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            iataCode: airlineCode
+        }));
+    };
 
     return (
         <div className="book-flight-page">
             <div className="left-section">
-                <SearchFlight />
+                <SearchFlight onSearch={handleShowFlights} />
                 <div className='flights-wrap'>
-                    <div className='flight-list'>
-                        {flights.map((flight, index) => (
-                            <FlightRecord
-                                key={index}
-                                location={flight.location}
-                                destination={flight.destination}
-                                departure={flight.departure}
-                                airline={flight.airline}
-                                duration={flight.duration}
-                                arrival={flight.arrival}
-                                price={flight.price}
-                                travelType={flight.travelType}
-                            />
-                        ))}
-                    </div>
+                    {loading && (
+                        <div className="overlay">
+                            <div className="loading">
+                                <div className="spinner"></div>
+                                <span>Loading</span>
+                            </div>
+                        </div>
+                    )}
+                    {newFlights.length > 0 ? (
+                        <div className='flight-list'>
+                            {newFlights.map((flight, index) => (
+                                <FlightRecord
+                                    key={index}
+                                    flight={flight}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="empty">No flights available</div>
+                    )}
                     <FlightFilters
                         sortOptions={sortOptions}
                         arrivalTimes={arrivalTimes}
                         stopsOptions={stopsOptions}
-                        airlines={airlines}
+                        airlines={airLines}
+                        airlineLoadMore={handleLoadMoreAirlines}
+                        onAirlineSelect={handleAirlineSelect}
                     />
                 </div>
             </div>
