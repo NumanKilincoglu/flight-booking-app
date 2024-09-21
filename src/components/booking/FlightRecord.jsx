@@ -88,7 +88,7 @@ const FlightRecord = ({ flight }) => {
                         <img alt="airplane" className='flight-icon' src={Arrival}></img>
                         <p className='bold-text gray'>Arrival</p>
                     </div>
-                    <p className='bold-text dark-gray'> {formatDate(estimatedLandingTime)}</p>
+                    <p className='bold-text dark-gray'> {formatDate(estimatedLandingTime || expectedTimeBoarding || actualOffBlockTime)}</p>
                     <p className='bold-text gray'>Airport: {destinations[0]}</p>
                 </div>
             </div>

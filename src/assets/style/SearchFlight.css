@@ -92,19 +92,31 @@ label {
 input[type="text"],
 input[type="date"] {
   width: 100%;
-  padding: 10px;
   font-size: 16px;
-  padding-left: 20px;
-  height: 44px;
-  border: 1px solid #ccc;
   box-sizing: border-box;
   transition: border-color 0.3s;
+  border: none;
 }
 
 input[type="text"]:focus,
 input[type="date"]:focus {
   border-color: #4c0197;
   outline: none;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.4px solid rgb(172, 172, 172);
+  height: 36px;
+  padding-left: 15px;
+  padding-right: 10px;
+}
+
+.input-container img {
+  width: 24px;
+  height: 24px;
 }
 
 .left-radius {
@@ -125,4 +137,8 @@ input[type="date"]:focus {
 .flight-icon {
   width: 26px;
   height: 26px;
+}
+
+.date-padding {
+  padding-left: 10px;
 }

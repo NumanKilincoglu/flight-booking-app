@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import '../../assets/style/SearchFlight.css';
 import Plane from '../../assets/images/plane.png';
 import FlightService from '../../services/FlightService';
+import Departure from '../../assets/images/departures.png';
+import Arrival from '../../assets/images/arrivals.png';
 
 const SearchFlight = ({ onSearch }) => {
   const [filter, setFilter] = useState({
@@ -79,22 +81,29 @@ const SearchFlight = ({ onSearch }) => {
         <div className='location-wrap'>
           <div className='w100'>
             <label>From</label>
-            <input
-              className='left-radius'
-              type="text"
-              value={'AMS'}
-              onChange={(e) => setFilter(prev => ({ ...prev, from: e.target.value }))}
-              disabled
-            />
+            <div className='input-container left-radius'>
+              <img alt='arrival' src={Departure} />
+              <input
+                className='left-radius'
+                type="text"
+                value={'AMS'}
+                onChange={(e) => setFilter(prev => ({ ...prev, from: e.target.value }))}
+                disabled
+              />
+            </div>
+
           </div>
           <div className='w100'>
             <label>To</label>
-            <input
-              className='right-radius'
-              type="text"
-              value={filter.to}
-              onChange={(e) => setFilter(prev => ({ ...prev, to: e.target.value }))}
-            />
+            <div className="input-container right-radius">
+              <img alt='arrival' src={Arrival} />
+              <input
+                className="right-radius"
+                type="text"
+                value={filter.to}
+                onChange={(e) => setFilter(prev => ({ ...prev, to: e.target.value }))}
+              />
+            </div>
             {showToDropdown && (
               <ul className="dropdown-menu">
                 {filteredToDestinations.map((dest, index) => (
@@ -113,21 +122,23 @@ const SearchFlight = ({ onSearch }) => {
         <div className='date-wrap'>
           <div className='w100'>
             <label>Depart</label>
-            <input
-              className='left-radius'
-              type="date"
-              value={filter.depart}
-              onChange={(e) => setFilter(prev => ({ ...prev, depart: e.target.value }))}
-            />
+            <div className='input-container left-radius'>
+              <input
+                type="date"
+                value={filter.depart}
+                onChange={(e) => setFilter(prev => ({ ...prev, depart: e.target.value }))}
+              />
+            </div>
           </div>
           <div className='w100'>
             <label>Return</label>
-            <input
-              className='right-radius'
-              type="date"
-              value={filter.arrival}
-              onChange={(e) => setFilter(prev => ({ ...prev, arrival: e.target.value }))}
-            />
+            <div className='input-container right-radius'>
+              <input
+                type="date"
+                value={filter.arrival}
+                onChange={(e) => setFilter(prev => ({ ...prev, arrival: e.target.value }))}
+              />
+            </div>
           </div>
         </div>
       </div>
