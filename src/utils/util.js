@@ -9,7 +9,7 @@ export const calculateDuration = (startDate, endDate) => {
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
-    return `${String(diffHours).padStart(2, '0')}h ${String(diffMinutes).padStart(2, '0')}M`;
+    return `${String(diffHours).padStart(2, '0')}h ${String(diffMinutes).padStart(2, '0')}m`;
 };
 
 export const formatDate = (dateString) => {

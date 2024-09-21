@@ -6,6 +6,7 @@ const FlightHistoryCard = ({ flight }) => {
     const {
         flightName,
         flightNumber,
+        airlineName,
         scheduleDateTime,
         actualOffBlockTime,
         expectedTimeGateOpen,
@@ -52,7 +53,7 @@ const FlightHistoryCard = ({ flight }) => {
                             </div>
                             <div>
                                 <div className="airline-sub-info">
-                                    <div className="gray-bold">{prefixIATA}</div>
+                                    <div className="gray-bold">{airlineName || prefixIATA}</div>
                                     <button onClick={toggleDetails} className="flight-details-btn">Flight Details
                                         <span className='dropdown-arrow'></span>
                                     </button>

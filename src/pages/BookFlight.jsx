@@ -45,7 +45,7 @@ const BookFlight = () => {
         to: '',
         depart: '',
         arrival: '',
-        iataCode: '',
+        airlineCode: '',
         sortBy: 'scheduleTime',
         page: 0
     });
@@ -59,7 +59,7 @@ const BookFlight = () => {
                     to: filters.to,
                     depart: filters.depart,
                     arrival: filters.arrival,
-                    iataCode: filters.iataCode,
+                    airlineCode: filters.airlineCode,
                     sortBy: filters.sortBy,
                     page: filters.page,
                 }
@@ -78,6 +78,7 @@ const BookFlight = () => {
 
     const handleShowFlights = async (filter) => {
         setFilters(filter);
+        getAllFligths();
     };
 
     useEffect(() => {
@@ -110,7 +111,7 @@ const BookFlight = () => {
     const handleAirlineSelect = (airlineCode) => {
         setFilters((prevFilters) => ({
             ...prevFilters,
-            iataCode: airlineCode
+            airlineCode: airlineCode
         }));
     };
 

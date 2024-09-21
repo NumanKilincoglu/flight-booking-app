@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import '../../assets/style/SearchFlight.css';
 import Plane from '../../assets/images/plane.png';
 import FlightService from '../../services/FlightService';
@@ -16,52 +16,59 @@ const SearchFlight = ({ onSearch }) => {
   });
 
   const [toDestinations, setToDestination] = useState([]);
-  const [filteredToDestinations, setFilteredToDestinations] = useState([]);
   const [showToDropdown, setShowToDropdown] = useState(false);
+  const previousToValue = useRef(filter.to);
 
+  const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
+  };
 
   useEffect(() => {
-    const fetchToDestinations = async () => {
-      if (filter.to) {
+    const fetchToDestinations = debounce(async () => {
+      if (filter.to && filter.to !== previousToValue.current) {
         try {
-          const flightData = await FlightService.getDestinations({ search: filter.to });
-          setToDestination(flightData);
+          const data = await FlightService.getDestinations({ search: filter.to });
+          setToDestination(data);
+          setShowToDropdown(data.length > 0);
         } catch (error) {
           console.error('Error fetching to destinations:', error);
         }
       }
-    };
+    }, 1000);
 
     fetchToDestinations();
+
+    return () => {
+      clearTimeout(fetchToDestinations);
+    };
   }, [filter.to]);
 
   useEffect(() => {
-    if (filter.to && toDestinations.length) {
-      setFilteredToDestinations(toDestinations);
-      setShowToDropdown(true);
-    } else {
-      setShowToDropdown(false);
-    }
-  }, [filter.to, toDestinations]);
-
-  useEffect(() => {
-    if (toDestinations.length) {
-      setFilteredToDestinations(toDestinations);
-      setShowToDropdown(true);
-    } else {
-      setShowToDropdown(false);
-    }
-
-  }, [toDestinations]);
+    previousToValue.current = filter.to;
+  }, [filter.to]);
 
   const handleToDestination = (selectedDestination, event) => {
-    event.stopPropagation();
-    setFilter(prev => ({ ...prev, to: selectedDestination.iata }));
-    setShowToDropdown(false);
+    if (filter.to !== selectedDestination.iata) {
+      setFilter(prev => ({ ...prev, to: selectedDestination.iata, iataCode: selectedDestination.iata }));
+      setShowToDropdown(false);
+      resetSearch();
+    }
   };
+
+  const resetSearch = useCallback(() => {
+    setToDestination([]);
+    setShowToDropdown(false);
+  }, []);
 
   const handleShowFlights = () => {
     onSearch(filter);
+    resetSearch();
   };
 
   return (
@@ -71,7 +78,6 @@ const SearchFlight = ({ onSearch }) => {
           <img alt="airplane" className='flight-icon' src={Plane}></img>
           <h2>BOOK YOUR FLIGHT</h2>
         </div>
-
         <div className='trip-type'>
           <button className='left'>Round Trip</button>
           <button className='right'>One Way</button>
@@ -91,7 +97,6 @@ const SearchFlight = ({ onSearch }) => {
                 disabled
               />
             </div>
-
           </div>
           <div className='w100'>
             <label>To</label>
@@ -106,7 +111,7 @@ const SearchFlight = ({ onSearch }) => {
             </div>
             {showToDropdown && (
               <ul className="dropdown-menu">
-                {filteredToDestinations.map((dest, index) => (
+                {toDestinations.map((dest, index) => (
                   <li
                     key={index}
                     onClick={(e) => handleToDestination(dest, e)}

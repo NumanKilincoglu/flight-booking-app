@@ -32,7 +32,9 @@ const FlightRecord = ({ flight }) => {
 
         try {
 
-            if (new Date(flight.scheduleDateTime) < new Date()) {
+            const dateLimit = (flight.expectedTimeGateClosing || expectedTimeBoarding || expectedTimeGateOpen)
+
+            if (new Date(dateLimit) < new Date()) {
                 return toast.error('Cannot book a flight that has already departed.');
             }
 
