@@ -9,10 +9,10 @@ const SearchFlight = ({ onSearch }) => {
     to: '',
     depart: '',
     arrival: '',
-    iataCode:''
+    iataCode: '',
+    page: 0
   });
-  
-  const [destinationIataCode, setIataCode] = useState('');
+
   const [toDestinations, setToDestination] = useState([]);
   const [filteredToDestinations, setFilteredToDestinations] = useState([]);
   const [showToDropdown, setShowToDropdown] = useState(false);
@@ -55,7 +55,6 @@ const SearchFlight = ({ onSearch }) => {
   const handleToDestination = (selectedDestination, event) => {
     event.stopPropagation();
     setFilter(prev => ({ ...prev, to: selectedDestination.iata }));
-    setIataCode(selectedDestination.iata);
     setShowToDropdown(false);
   };
 

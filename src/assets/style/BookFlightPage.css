@@ -31,12 +31,13 @@
   gap: 1rem;
 }
 
-.flight-list {
+.flight-list-wrap {
   display: flex;
   flex-direction: column;
   flex: 4;
   gap: 4rem;
 }
+
 
 .empty {
   display: flex;

@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import '../assets/style/BookFlightPage.css';
 import Card from '../components/booking/Card';
+import LoadingScreen from '../components/shared/Loading';
 import SearchFlight from '../components/booking/SearchFlight.jsx';
 import FlightRecord from '../components/booking/FlightRecord.jsx';
 import FlightFilters from '../components/booking/FlightFilters';
 import Rental from '../assets/images/car.jpg'
 import Hotel from '../assets/images/hotel.jpg'
 import Travel from '../assets/images/travel.jpg';
-
+import LoadMore from '../components/flightHistory/LoadMore';
 import FlightService from '../services/FlightService';
 
 const cards = [
@@ -17,9 +18,9 @@ const cards = [
 ];
 
 const sortOptions = [
-    { value: 'lowest-price', label: 'Lowest Price' },
-    { value: 'highest-price', label: 'Highest Price' },
-    { value: 'duration', label: 'Duration' }
+    { value: 'airlineCode', label: 'Airline' },
+    { value: 'scheduleDate', label: 'Flight Date' },
+    { value: 'scheduleTime', label: 'Flight Time' }
 ];
 
 const arrivalTimes = [
@@ -39,36 +40,41 @@ const BookFlight = () => {
     const [airLines, setAirLines] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [selectedAirline, setSelectedAirline] = useState(null);
     const [filters, setFilters] = useState({
         from: '',
         to: '',
         depart: '',
         arrival: '',
-        iataCode: ''
+        iataCode: '',
+        sortBy: 'scheduleTime',
+        page: 0
     });
 
-    const searchFligths = async () => {
-
+    const getAllFligths = useCallback(async () => {
         try {
             setLoading(true);
-            const flightData = await FlightService.getFlights({
+            const flightData = await FlightService.searchFlights({
                 params: {
                     from: filters.from,
                     to: filters.to,
                     depart: filters.depart,
                     arrival: filters.arrival,
-                    iataCode: filters.iataCode
+                    iataCode: filters.iataCode,
+                    sortBy: filters.sortBy,
+                    page: filters.page,
                 }
             });
-            console.log(filters);
-            setFlights(flightData);
+            if (filters.page === 0) {
+                setFlights(flightData);
+            } else {
+                setFlights((prevFlights) => [...prevFlights, ...flightData]);
+            }
         } catch (error) {
             console.error('Error fetching flights:', error);
         } finally {
             setLoading(false);
         }
-    };
+    }, [filters]);
 
     const handleShowFlights = async (filter) => {
         setFilters(filter);
@@ -76,9 +82,9 @@ const BookFlight = () => {
 
     useEffect(() => {
         if (filters) {
-            searchFligths();
+            getAllFligths();
         }
-    }, [filters]);
+    }, [filters, getAllFligths]);
 
     useEffect(() => {
         const fetchAirlines = async () => {
@@ -102,11 +108,22 @@ const BookFlight = () => {
     };
 
     const handleAirlineSelect = (airlineCode) => {
-        setSelectedAirline(airlineCode);
         setFilters((prevFilters) => ({
             ...prevFilters,
             iataCode: airlineCode
         }));
+    };
+
+    const handleSort = (sortCode) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            sortBy: sortCode
+        }));
+    };
+
+    const nextPage = () => {
+        const previousPage = filters.page;
+        setFilters({ page: previousPage + 1 })
     };
 
     return (
@@ -114,26 +131,19 @@ const BookFlight = () => {
             <div className="left-section">
                 <SearchFlight onSearch={handleShowFlights} />
                 <div className='flights-wrap'>
-                    {loading && (
-                        <div className="overlay">
-                            <div className="loading">
-                                <div className="spinner"></div>
-                                <span>Loading</span>
-                            </div>
-                        </div>
-                    )}
+                    {loading && <LoadingScreen />}
+
                     {newFlights.length > 0 ? (
-                        <div className='flight-list'>
+                        <div className='flight-list-wrap'>
                             {newFlights.map((flight, index) => (
-                                <FlightRecord
-                                    key={index}
-                                    flight={flight}
-                                />
+                                <FlightRecord key={index} flight={flight} />
                             ))}
+                            <LoadMore onNextPage={nextPage} />
                         </div>
                     ) : (
                         <div className="empty">No flights available</div>
                     )}
+
                     <FlightFilters
                         sortOptions={sortOptions}
                         arrivalTimes={arrivalTimes}
@@ -141,8 +151,10 @@ const BookFlight = () => {
                         airlines={airLines}
                         airlineLoadMore={handleLoadMoreAirlines}
                         onAirlineSelect={handleAirlineSelect}
+                        onSortSelect={handleSort}
                     />
                 </div>
+
             </div>
             <div className="right-section">
                 {cards.map((card, index) => (

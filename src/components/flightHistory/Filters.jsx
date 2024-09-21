@@ -23,7 +23,7 @@ const FilterSection = () => {
                         <div className="star-group">
                             <div className="star-rating">
                                 {[...Array(6)].map((_, i) => (
-                                    <span key={i} className={`star ${i < starCount ? 'filled' : 'empty'}`}>
+                                    <span key={i} className={`star ${i < starCount ? 'filled' : 'star-empty'}`}>
                                         &#9733;
                                     </span>
                                 ))}

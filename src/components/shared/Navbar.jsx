@@ -7,12 +7,12 @@ import Deals from '../../assets/images/price-tag.png';
 const Navbar = () => {
     return (
         <nav className="navbar">
-            <div className="navbar-logo">
+            <a href="/" className="navbar-logo">
                 <img src={Logo} alt="Logo" />
                 <h4>Plane Scape</h4>
-            </div>
+            </a>
             <div className="navbar-menu">
-                <a href="/deals">
+                <a href="/">
                     <img
                         src={Deals}
                         alt="User Avatar"

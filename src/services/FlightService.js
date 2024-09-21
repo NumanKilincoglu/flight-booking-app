@@ -1,12 +1,12 @@
 import apiInstance from './ApiService.js';
 
-export const getFlights = async (req) => {
+export const searchFlights = async (req) => {
     try {
         const response = await apiInstance.get('flights/search', { params: req.params });
         if (!response.data.success || !response?.data?.flights) return []
         return response.data.flights;
     } catch (error) {
-        console.log(error)
+        console.log(error?.response?.data?.error);
         return []
     }
 };
@@ -17,7 +17,7 @@ export const getDestinations = async (req) => {
         if (!response.data.success || !response?.data?.destinations) return []
         return response.data.destinations;
     } catch (error) {
-        console.log(error)
+        console.log(error?.response?.data?.error);
         return []
     }
 };
@@ -28,15 +28,51 @@ export const getAirlines = async (req) => {
         if (!response.data.success || !response?.data?.airlines) return []
         return response.data.airlines;
     } catch (error) {
-        console.log(error)
+        console.log(error?.response?.data?.error);
         return []
     }
 };
 
+export const bookFlight = async (req) => {
+    try {
+        const response = await apiInstance.post('reservation/book', req.data);
+        if (!response?.data?.success) return false
+        return response.data.success;
+    } catch (error) {
+        console.log(error?.response?.data?.error);
+        return false
+    }
+};
+
+export const getFlights = async (req) => {
+    try {
+        const response = await apiInstance.get('reservation/all', { params: req.params });
+        if (!response.data.success || !response?.data?.flights) return []
+        return response.data.flights;
+    } catch (error) {
+        console.log(error?.response?.data?.error);
+        return []
+    }
+};
+
+export const getAverageFarePrice = async () => {
+    try {
+        const response = await apiInstance.get('reservation/average');
+        if (!response.data.success) return 0
+        return response.data.averageFarePrice;
+    } catch (error) {
+        console.log(error?.response?.data?.error);
+        return 0
+    }
+};
+
 const FlightService = {
-    getFlights,
+    searchFlights,
     getDestinations,
-    getAirlines
+    getAirlines,
+    getFlights,
+    bookFlight,
+    getAverageFarePrice
 }
 
 export default FlightService

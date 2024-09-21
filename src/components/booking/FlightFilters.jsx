@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../assets/style/FlightFilters.css';
 
-const FlightFilters = ({ sortOptions, arrivalTimes, stopsOptions, airlines, airlineLoadMore, onAirlineSelect }) => {
+const FlightFilters = ({ sortOptions, arrivalTimes, stopsOptions, airlines, airlineLoadMore, onAirlineSelect, onSortSelect }) => {
 
     const handleLoadMoreAirlines = () => {
         airlineLoadMore();
@@ -9,15 +9,19 @@ const FlightFilters = ({ sortOptions, arrivalTimes, stopsOptions, airlines, airl
 
     const handleAirlineChange = (event) => {
         const selectedIata = event.target.value;
-        console.log(selectedIata,"-->")
         onAirlineSelect(selectedIata);
+    };
+
+    const handleSortChange = (event) => {
+        const selectedSort = event.target.value;
+        onSortSelect(selectedSort);
     };
 
     return (
         <div className="flight-filters">
             <div className="filter-section">
                 <h4>Sort By</h4>
-                <select className="flight-sort-dropdown">
+                <select className="flight-sort-dropdown" onChange={handleSortChange}>
                     {sortOptions.map(option => (
                         <option key={option.value} value={option.value}>
                             {option.label}

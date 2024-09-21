@@ -1,65 +1,86 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import '../assets/style/FlightHistoryPage.css';
 import FilterSection from '../components/flightHistory/Filters.jsx';
+import LoadingScreen from '../components/shared/Loading';
 import SortSection from '../components/flightHistory/SortSection.jsx';
 import FlightHistoryCard from '../components/flightHistory/FightHistoryCard';
-
-const sortOptions = [
-  { value: 'lowest-price', label: 'Lowest Price' },
-  { value: 'highest-price', label: 'Highest Price' },
-  { value: 'shortest-duration', label: 'Shortest Duration' },
-  { value: 'earliest-departure', label: 'Earliest Departure' }
-];
-
-const flightDataList = [
-  {
-    airlineLogo: 'https://www.skyscanner.net/images/airlines/small/H9.png',
-    departureTime: '10:30 AM',
-    arrivalTime: '1:45 PM',
-    airlineName: 'Pegasus',
-    stopCount: "1 Stop",
-    flightDuration: '3h 15m',
-    departureCode: 'JFK',
-    arrivalCode: 'LAX',
-    flightCode: 'DL 123',
-    price: '$350',
-    flightPackages: [
-      { packageName: 'Main', price: '$350' },
-      { packageName: 'Comfort+', price: '$450' },
-      { packageName: 'Plus', price: '$550' },
-    ],
-  },
-  {
-    airlineLogo: 'https://www.skyscanner.net/images/airlines/small/21.png',
-    departureTime: '2:00 PM',
-    arrivalTime: '4:30 PM',
-    airlineName: 'American Airlines',
-    stopCount: "Nonstop",
-    flightDuration: '2h 30m',
-    departureCode: 'ORD',
-    arrivalCode: 'DFW',
-    flightCode: 'AA 456',
-    price: '$99900',
-    flightPackages: [
-      { packageName: 'Main', price: '$900' },
-      { packageName: 'Comfort+', price: '$800' },
-    ],
-  },
-];
+import FlightService from '../services/FlightService';
+import HistorySortOptions from '../constants/constants.js'
+import LoadMore from '../components/flightHistory/LoadMore';
 
 const FlightHistory = () => {
+  const [newFlights, setFlights] = useState([]);
+  const [averageFare, setAverageFare] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({ sortBy: 'farePrice', order: 'ASC', page: 1, limit: 5 });
+
+  useEffect(() => {
+    const getFlightBookings = async () => {
+      try {
+        setLoading(true);
+        const flightData = await FlightService.getFlights({
+          params: {
+            sortBy: filters.sortBy, order: filters.order, page: filters.page, limit: filters.limit
+          }
+        });
+
+        if (filters.page === 1) {
+          setFlights(flightData);
+        } else {
+          setFlights((prevFlights) => [...prevFlights, ...flightData]);
+        }
+
+      } catch (error) {
+        console.error('Error fetching flights:', error);
+        setFlights([]);
+      }
+      finally {
+        setLoading(false);
+      }
+    };
+    getFlightBookings();
+  }, [filters]);
+
+  useEffect(() => {
+    const getAveragePrice = async () => {
+      try {
+        const price = await FlightService.getAverageFarePrice();
+        setAverageFare(price);
+      } catch (error) {
+        console.error('Error fetching fare price:', error);
+        setAverageFare(0);
+      }
+    };
+    getAveragePrice();
+  }, [filters]);
+
+  const handleSort = (sort) => {
+    setFilters({ order: sort.order, sortBy: sort.value, page: 1, limit: 5 })
+  };
+
+  const nextPage = () => {
+    const previousPage = filters.page;
+    setFilters({ page: previousPage + 1 })
+  };
+
   return (
     <div className="flight-history-page">
       <FilterSection />
       <div className='main-wrap'>
-        <SortSection avgFare="$500" sortOptions={sortOptions} />
+        <SortSection avgFare={averageFare} sortOptions={HistorySortOptions} onSortSelect={handleSort} />
         <div className="history-list">
-          {flightDataList.map((flight, index) => (
-            <FlightHistoryCard key={index} flight={flight} />
-          ))}
+          {loading ? (
+            <LoadingScreen />
+          ) : newFlights.length === 0 ? (
+            <p>No flight history available.</p>
+          ) : (
+            newFlights.map((flight, index) => (
+              <FlightHistoryCard key={index} flight={flight} />
+            ))
+          )}
         </div>
+        <LoadMore onNextPage={nextPage} />
       </div>
-
     </div>
   )
 }

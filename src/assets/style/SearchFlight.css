@@ -26,6 +26,7 @@
 .show-flight {
   padding: 1rem 1.5rem;
   background-color: #4c0197;
+  border-radius: 4px;
   color: white;
   border: none;
   cursor: pointer;
@@ -35,8 +36,12 @@
 }
 
 .show-flight {
-   width: 200px;
-  }
+  width: 200px;
+}
+
+.show-flight:hover {
+  background-color: #7c1ade;
+}
 
 .trip-type .left {
   border-top-left-radius: 20px;
@@ -89,7 +94,7 @@ input[type="date"] {
   width: 100%;
   padding: 10px;
   font-size: 16px;
-  padding-left:20px;
+  padding-left: 20px;
   height: 44px;
   border: 1px solid #ccc;
   box-sizing: border-box;

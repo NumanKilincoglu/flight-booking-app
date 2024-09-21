@@ -5,6 +5,7 @@
   padding: 10px 20px;
   background-color: #f9f9f9;
   border-bottom: 1px solid #ddd;
+  height: 100px;
 }
 
 .filter-buttons {
@@ -77,7 +78,7 @@
   font-size: 20px;
 }
 
-.star.empty {
+.star-empty {
   color: #ccc;
 }
 
@@ -86,4 +87,8 @@
   background-color: #ccc;
   height: 30px;
   margin: 0 10px;
+}
+
+.package-empty {
+  background-color: #ccc;
 }
