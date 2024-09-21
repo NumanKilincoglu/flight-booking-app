@@ -141,9 +141,10 @@ const BookFlight = () => {
                             ))}
                             <LoadMore onNextPage={nextPage} />
                         </div>
-                    ) : (
-                        <div className="empty">No flights available</div>
-                    )}
+                    )
+                        : (
+                            <div className="empty">No flights available</div>
+                        )}
 
                     <FlightFilters
                         sortOptions={sortOptions}
