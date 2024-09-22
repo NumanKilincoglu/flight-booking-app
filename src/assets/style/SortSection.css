@@ -53,3 +53,18 @@
   border-left: 2px solid #007bff;
   transform: rotate(-135deg);
 }
+
+@media screen and (max-width: 976px) {
+  
+  .sort-section {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .sort-left, .sort-right {
+    width: 100%;
+  }
+}

@@ -74,7 +74,7 @@
 }
 
 .star {
-  color: #272A31;
+  color: #272a31;
   font-size: 20px;
 }
 
@@ -91,4 +91,36 @@
 
 .package-empty {
   background-color: #ccc;
+}
+
+@media screen and (max-width: 976px) {
+  .history-filter-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+    height: auto;
+  }
+
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1.2rem 0rem;
+  }
+
+  .star-rating-section {
+    display: flex;
+    gap: 0rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .star-group {
+    flex-wrap: wrap;
+    gap: 10px;
+    width: auto;
+  }
 }

@@ -3,28 +3,51 @@ import '../../assets/style/FlightHistoryCard.css';
 import { calculateDuration } from '../../utils/util.js';
 
 const FlightHistoryCard = ({ flight }) => {
+    const [detailsVisible, setDetailsVisible] = useState(false);
+
     const {
         flightName,
+        tripType,
         flightNumber,
-        airlineName,
         scheduleDateTime,
         actualOffBlockTime,
         expectedTimeGateOpen,
+        airlineName,
+        expectedTimeGateClosing,
         expectedTimeBoarding,
         estimatedLandingTime,
+        actualLandingTime,
         prefixIATA,
         aircraftRegistration,
         departureCode,
         route: { destinations },
-        aircraftType
+        aircraftType,
+        scheduleDate
     } = flight;
 
-    const [detailsVisible, setDetailsVisible] = useState(false);
-
-    const departureTime = new Date(scheduleDateTime || actualOffBlockTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const arrivalTime = new Date(estimatedLandingTime || expectedTimeGateOpen || expectedTimeBoarding).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const flightDuration = calculateDuration(estimatedLandingTime || expectedTimeBoarding, scheduleDateTime);
     const [arrivalCode] = destinations;
+
+    const flightDuration = calculateDuration(estimatedLandingTime || estimatedLandingTime || actualLandingTime || expectedTimeBoarding || actualOffBlockTime, scheduleDateTime);
+
+    const departureTime = scheduleDateTime || actualOffBlockTime || expectedTimeGateClosing
+        ? new Date(scheduleDateTime || actualOffBlockTime || expectedTimeGateClosing).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        : 'To be announced';
+
+    const arrivalTime = estimatedLandingTime || actualLandingTime
+        ? new Date(estimatedLandingTime || actualLandingTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        : 'TBA';
+
+    const boardingTime = expectedTimeBoarding
+        ? new Date(expectedTimeBoarding).toLocaleTimeString()
+        : 'TBA';
+
+    const gateOpens = expectedTimeGateOpen
+        ? new Date(expectedTimeGateOpen).toLocaleTimeString()
+        : 'TBA';
+
+    const landingTime = estimatedLandingTime || actualLandingTime
+        ? new Date(estimatedLandingTime || actualLandingTime).toLocaleTimeString()
+        : 'TBA';
 
     const totalSlots = 5;
     const filledPackages = flight.farePackage?.length || 0;
@@ -96,22 +119,24 @@ const FlightHistoryCard = ({ flight }) => {
                 <div className="flight-details-section">
                     <div className='flight-details'>
                         <h5 className='bold-text'>Boarding</h5>
-                        <p className='gray bold-text'><strong className='gray-light-bold'>Boarding Time: </strong> {new Date(expectedTimeBoarding).toLocaleTimeString()}</p>
-                        <p className='gray bold-text'><strong className='gray-light-bold'>Gate Opens: </strong> {new Date(expectedTimeGateOpen).toLocaleTimeString()}</p>
+                        <p className='gray bold-text'><strong className='gray-light-bold'>Boarding Time: </strong> {boardingTime}</p>
+                        <p className='gray bold-text'><strong className='gray-light-bold'>Gate Opens: </strong> {gateOpens}</p>
+                        <p className='gray bold-text'><strong className='gray-light-bold'>Schedule: </strong> {scheduleDate}</p>
                         <p className='gray bold-text'>
                             <strong className='gray-light-bold'>Landing: </strong>
-                            {estimatedLandingTime ? new Date(estimatedLandingTime).toLocaleTimeString() : 'To Be Announced'}
+                            {landingTime}
                         </p>
                     </div>
                     <div className='flight-details'>
                         <h5 className='bold-text'>Aircraft</h5>
                         <p className='gray bold-text'><strong className='gray-light-bold'>Registration: </strong> {aircraftRegistration}</p>
-                        <p className='gray bold-text'><strong className='gray-light-bold'>Type: </strong> {aircraftType.iataMain}</p>
+                        <p className='gray bold-text'><strong className='gray-light-bold'>Type: </strong> {aircraftType?.iataMain}</p>
                     </div>
                     <div className='flight-details'>
                         <h5 className='bold-text'>Flight</h5>
                         <p className='gray bold-text'><strong className='gray-light-bold'>Number: </strong> {flightNumber}</p>
-                        <p className='gray bold-text'><strong className='gray-light-bold'>Type: </strong> {aircraftType.iataMain}</p>
+                        <p className='gray bold-text'><strong className='gray-light-bold'>Name: </strong> {flightName}</p>
+                        <p className='gray bold-text'><strong className='gray-light-bold'>Type: </strong> {tripType}</p>
                     </div>
                 </div>
             )}

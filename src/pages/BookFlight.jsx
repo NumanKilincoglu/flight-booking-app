@@ -5,35 +5,10 @@ import LoadingScreen from '../components/shared/Loading';
 import SearchFlight from '../components/booking/SearchFlight.jsx';
 import FlightRecord from '../components/booking/FlightRecord.jsx';
 import FlightFilters from '../components/booking/FlightFilters';
-import Rental from '../assets/images/car.jpg'
-import Hotel from '../assets/images/hotel.jpg'
-import Travel from '../assets/images/travel.jpg';
+
 import LoadMore from '../components/flightHistory/LoadMore';
 import FlightService from '../services/FlightService';
-
-const cards = [
-    { imgSrc: Rental, title: 'CAR RENTALS' },
-    { imgSrc: Hotel, title: 'HOTELS' },
-    { imgSrc: Travel, title: 'TRAVEL PACKAGES' },
-];
-
-const sortOptions = [
-    { value: 'airlineCode', label: 'Airline' },
-    { value: 'scheduleDate', label: 'Flight Date' },
-    { value: 'scheduleTime', label: 'Flight Time' }
-];
-
-const arrivalTimes = [
-    { value: '5am-12pm', label: '5:00 AM - 12:00 PM' },
-    { value: '12pm-6pm', label: '12:00 PM - 6:00 PM' },
-    { value: '6pm-12am', label: '6:00 PM - 12:00 AM' }
-];
-
-const stopsOptions = [
-    { value: 'nonstop', label: 'Nonstop' },
-    { value: '1-stop', label: '1 Stop' },
-    { value: '2-stops', label: '2 Stops' }
-];
+import { StopsOptions, FlightSortOptions, FlightArrivalTimes, Cards } from '../constants/constants.js'
 
 const BookFlight = () => {
     const [newFlights, setFlights] = useState([]);
@@ -76,11 +51,6 @@ const BookFlight = () => {
         }
     }, [filters]);
 
-    const handleShowFlights = async (filter) => {
-        setFilters(filter);
-        getAllFligths();
-    };
-
     useEffect(() => {
         if (filters) {
             getAllFligths();
@@ -103,6 +73,11 @@ const BookFlight = () => {
 
         fetchAirlines();
     }, [page]);
+
+    const handleShowFlights = async (filter) => {
+        setFilters(filter);
+        getAllFligths();
+    };
 
     const handleLoadMoreAirlines = () => {
         setPage((prev) => prev + 1);
@@ -147,9 +122,9 @@ const BookFlight = () => {
                         )}
 
                     <FlightFilters
-                        sortOptions={sortOptions}
-                        arrivalTimes={arrivalTimes}
-                        stopsOptions={stopsOptions}
+                        sortOptions={FlightSortOptions}
+                        arrivalTimes={FlightArrivalTimes}
+                        stopsOptions={StopsOptions}
                         airlines={airLines}
                         airlineLoadMore={handleLoadMoreAirlines}
                         onAirlineSelect={handleAirlineSelect}
@@ -159,7 +134,7 @@ const BookFlight = () => {
 
             </div>
             <div className="right-section">
-                {cards.map((card, index) => (
+                {Cards.map((card, index) => (
                     <Card key={index} imgSrc={card.imgSrc} title={card.title} />
                 ))}
             </div>

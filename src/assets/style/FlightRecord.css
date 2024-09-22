@@ -96,6 +96,10 @@
   gap: 0.1rem;
 }
 
+.flight-record .flight-details-section {
+  padding: 0;
+}
+
 h5,
 h4 {
   margin: 0;
@@ -138,7 +142,7 @@ p {
 }
 
 .line {
-  background-color: #c1c7cf;
+  background-color: #7c1ade;
   border-radius: 0.5rem;
   display: block;
   height: 0.2rem;

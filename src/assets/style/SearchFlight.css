@@ -144,3 +144,21 @@ input[type="date"]:focus {
 .date-padding {
   padding-left: 10px;
 }
+
+@media screen and (max-width: 976px) {
+  .search-wrap {
+    flex-wrap: wrap;
+  }
+
+  .search-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .date-wrap, .location-wrap {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

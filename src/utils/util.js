@@ -13,7 +13,7 @@ export const calculateDuration = (startDate, endDate) => {
 };
 
 export const formatDate = (dateString) => {
-    if (!dateString) return;
+    if (!dateString) return 'TBA';
     const date = new Date(dateString);
 
     return new Intl.DateTimeFormat('en-US', {

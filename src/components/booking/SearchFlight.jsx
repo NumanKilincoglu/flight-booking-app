@@ -15,9 +15,46 @@ const SearchFlight = ({ onSearch }) => {
     page: 0
   });
 
-  const [toDestinations, setToDestination] = useState([]);
+  const [destinations, setDestinations] = useState([]);
   const [showToDropdown, setShowToDropdown] = useState(false);
   const previousToValue = useRef(filter.to);
+
+  useEffect(() => {
+    const fetchDestinations = debounce(async () => {
+      if (filter.to && filter.to !== previousToValue.current) {
+        try {
+          const data = await FlightService.getDestinations({ search: filter.to });
+          setDestinations(data);
+          setShowToDropdown(data.length > 0);
+        } catch (error) {
+          console.error('Error fetching to destinations:', error);
+        }
+      }
+    }, 500);
+
+    fetchDestinations();
+
+    return () => {
+      clearTimeout(fetchDestinations);
+    };
+  }, [filter.to]);
+
+  useEffect(() => {
+    previousToValue.current = filter.to;
+  }, [filter.to]);
+
+  const resetSearch = useCallback(() => {
+    setDestinations([]);
+    setShowToDropdown(false);
+  }, []);
+
+  const handleDestination = (selectedDestination, event) => {
+    if (filter.to !== selectedDestination.iata) {
+      setFilter(prev => ({ ...prev, to: selectedDestination.iata, iataCode: selectedDestination.iata }));
+      setShowToDropdown(false);
+      resetSearch();
+    }
+  };
 
   const debounce = (func, delay) => {
     let timeout;
@@ -28,43 +65,6 @@ const SearchFlight = ({ onSearch }) => {
       }, delay);
     };
   };
-
-  useEffect(() => {
-    const fetchToDestinations = debounce(async () => {
-      if (filter.to && filter.to !== previousToValue.current) {
-        try {
-          const data = await FlightService.getDestinations({ search: filter.to });
-          setToDestination(data);
-          setShowToDropdown(data.length > 0);
-        } catch (error) {
-          console.error('Error fetching to destinations:', error);
-        }
-      }
-    }, 1000);
-
-    fetchToDestinations();
-
-    return () => {
-      clearTimeout(fetchToDestinations);
-    };
-  }, [filter.to]);
-
-  useEffect(() => {
-    previousToValue.current = filter.to;
-  }, [filter.to]);
-
-  const handleToDestination = (selectedDestination, event) => {
-    if (filter.to !== selectedDestination.iata) {
-      setFilter(prev => ({ ...prev, to: selectedDestination.iata, iataCode: selectedDestination.iata }));
-      setShowToDropdown(false);
-      resetSearch();
-    }
-  };
-
-  const resetSearch = useCallback(() => {
-    setToDestination([]);
-    setShowToDropdown(false);
-  }, []);
 
   const handleShowFlights = () => {
     onSearch(filter);
@@ -111,10 +111,10 @@ const SearchFlight = ({ onSearch }) => {
             </div>
             {showToDropdown && (
               <ul className="dropdown-menu">
-                {toDestinations.map((dest, index) => (
+                {destinations.map((dest, index) => (
                   <li
                     key={index}
-                    onClick={(e) => handleToDestination(dest, e)}
+                    onClick={(e) => handleDestination(dest, e)}
                     className="dropdown-item"
                   >
                     {`${dest?.publicName?.english} (${dest?.iata || ''})`}

@@ -17,8 +17,10 @@ const FlightRecord = ({ flight }) => {
         scheduleDateTime,
         actualOffBlockTime,
         expectedTimeGateOpen,
+        expectedTimeGateClosing,
         expectedTimeBoarding,
         estimatedLandingTime,
+        actualLandingTime,
         prefixIATA,
         aircraftRegistration,
         departureCode,
@@ -28,11 +30,27 @@ const FlightRecord = ({ flight }) => {
         tripType
     } = flight;
 
-    const bookFlight = async () => {
+    const flightDuration = calculateDuration(estimatedLandingTime || expectedTimeBoarding || actualOffBlockTime, scheduleDateTime);
 
+    const boardingTime = expectedTimeBoarding
+        ? new Date(expectedTimeBoarding).toLocaleTimeString()
+        : 'TBA';
+
+    const gateOpens = expectedTimeGateOpen
+        ? new Date(expectedTimeGateOpen).toLocaleTimeString()
+        : 'TBA';
+
+    const landingTime = estimatedLandingTime || actualLandingTime
+        ? new Date(estimatedLandingTime || actualLandingTime).toLocaleTimeString()
+        : 'TBA';
+
+    const estimatedLanding = formatDate(estimatedLandingTime || actualLandingTime) || 'TBA';
+
+    const bookFlight = async () => {
+        
         try {
 
-            const dateLimit = (flight.expectedTimeGateClosing || expectedTimeBoarding || expectedTimeGateOpen)
+            const dateLimit = (expectedTimeGateClosing || expectedTimeBoarding || expectedTimeGateOpen)
 
             if (new Date(dateLimit) < new Date()) {
                 return toast.error('Cannot book a flight that has already departed.');
@@ -46,8 +64,6 @@ const FlightRecord = ({ flight }) => {
         }
 
     };
-
-    const flightDuration = calculateDuration(estimatedLandingTime || expectedTimeBoarding || actualOffBlockTime, scheduleDateTime)
 
     const toggleDetails = () => {
         setDetailsVisible(!detailsVisible);
@@ -90,7 +106,7 @@ const FlightRecord = ({ flight }) => {
                         <img alt="airplane" className='flight-icon' src={Arrival}></img>
                         <p className='bold-text gray'>Arrival</p>
                     </div>
-                    <p className='bold-text dark-gray'> {formatDate(estimatedLandingTime || expectedTimeBoarding || actualOffBlockTime)}</p>
+                    <p className='bold-text dark-gray'> {estimatedLanding}</p>
                     <p className='bold-text gray'>Airport: {destinations[0]}</p>
                 </div>
             </div>
@@ -107,11 +123,11 @@ const FlightRecord = ({ flight }) => {
                 <div className="flight-details-section">
                     <div className='flight-details'>
                         <h5 className='bold-text'>Boarding</h5>
-                        <p className='gray bold-text'><strong className='gray-light-bold'>Boarding Time: </strong> {new Date(expectedTimeBoarding).toLocaleTimeString()}</p>
-                        <p className='gray bold-text'><strong className='gray-light-bold'>Gate Opens: </strong> {new Date(expectedTimeGateOpen).toLocaleTimeString()}</p>
+                        <p className='gray bold-text'><strong className='gray-light-bold'>Boarding Time: </strong> {boardingTime}</p>
+                        <p className='gray bold-text'><strong className='gray-light-bold'>Gate Opens: </strong> {gateOpens}</p>
                         <p className='gray bold-text'>
                             <strong className='gray-light-bold'>Landing: </strong>
-                            {estimatedLandingTime ? new Date(estimatedLandingTime).toLocaleTimeString() : 'To Be Announced'}
+                            {landingTime}
                         </p>
                     </div>
                     <div className='flight-details'>

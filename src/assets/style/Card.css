@@ -14,6 +14,18 @@
     justify-content: center;
     cursor: pointer;
   }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+    border-radius: 20px;
+    z-index: 1;
+}
   
   .card-content {
     position: absolute;
@@ -21,10 +33,12 @@
     left: 10px;
     padding: 10px;
     border-radius: 8px;
+    z-index: 2;
   }
   
   .card h3 {
-    font-size: 24px;
+    font-size: 20px;
     margin: 0;
+
   }
   

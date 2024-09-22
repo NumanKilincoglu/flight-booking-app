@@ -5,7 +5,7 @@ import LoadingScreen from '../components/shared/Loading';
 import SortSection from '../components/flightHistory/SortSection.jsx';
 import FlightHistoryCard from '../components/flightHistory/FightHistoryCard';
 import FlightService from '../services/FlightService';
-import HistorySortOptions from '../constants/constants.js'
+import { HistorySortOptions } from '../constants/constants.js'
 import LoadMore from '../components/flightHistory/LoadMore';
 
 const FlightHistory = () => {
@@ -69,17 +69,17 @@ const FlightHistory = () => {
       <div className='main-wrap'>
         <SortSection avgFare={averageFare} sortOptions={HistorySortOptions} onSortSelect={handleSort} />
         <div className="history-list">
-          {loading ? (
-            <LoadingScreen />
-          ) : newFlights.length === 0 ? (
-            <p>No flight history available.</p>
-          ) : (
+          {loading && <LoadingScreen />}
+          {!loading && newFlights.length > 0 &&
             newFlights.map((flight, index) => (
               <FlightHistoryCard key={index} flight={flight} />
             ))
-          )}
+          }
+          {!loading
+            && newFlights.length == 0
+            && (<p>No flight history available.</p>)}
         </div>
-        <LoadMore onNextPage={nextPage} />
+        {!loading && <LoadMore onNextPage={nextPage} />}
       </div>
     </div>
   )
