@@ -15,7 +15,8 @@
 
 .sort-right {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 0.5rem;
 }
 
@@ -66,5 +67,6 @@
 
   .sort-left, .sort-right {
     width: 100%;
+    align-items: flex-start;
   }
 }

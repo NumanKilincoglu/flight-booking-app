@@ -21,6 +21,7 @@ const BookFlight = () => {
         depart: '',
         arrival: '',
         airlineCode: '',
+        flightTime: null,
         sortBy: 'scheduleTime',
         page: 0
     });
@@ -37,6 +38,7 @@ const BookFlight = () => {
                     airlineCode: filters.airlineCode,
                     sortBy: filters.sortBy,
                     page: filters.page,
+                    flightTime: filters.flightTime
                 }
             });
             if (filters.page === 0) {
@@ -97,6 +99,13 @@ const BookFlight = () => {
         }));
     };
 
+    const handleFlightTime = (time) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            flightTime: time
+        }));
+    };
+
     const nextPage = () => {
         const previousPage = filters.page;
         setFilters({ page: previousPage + 1 })
@@ -109,17 +118,20 @@ const BookFlight = () => {
                 <div className='flights-wrap'>
                     {loading && <LoadingScreen />}
 
-                    {newFlights.length > 0 ? (
-                        <div className='flight-list-wrap'>
-                            {newFlights.map((flight, index) => (
-                                <FlightRecord key={index} flight={flight} />
-                            ))}
-                            <LoadMore onNextPage={nextPage} />
-                        </div>
-                    )
-                        : (
+                    <div className='flight-list-wrap'>
+                        {!loading && newFlights.length > 0 && (
+                            <>
+                                {newFlights.map((flight, index) => (
+                                    <FlightRecord key={index} flight={flight} />
+                                ))}
+                                <LoadMore onNextPage={nextPage} />
+                            </>
+                        )}
+
+                        {!loading && newFlights.length === 0 && (
                             <div className="empty">No flights available</div>
                         )}
+                    </div>
 
                     <FlightFilters
                         sortOptions={FlightSortOptions}
@@ -129,6 +141,7 @@ const BookFlight = () => {
                         airlineLoadMore={handleLoadMoreAirlines}
                         onAirlineSelect={handleAirlineSelect}
                         onSortSelect={handleSort}
+                        onTimeSelect={handleFlightTime}
                     />
                 </div>
 

@@ -20,13 +20,18 @@ const StopsOptions = [
 const FlightSortOptions = [
     { value: 'airlineCode', label: 'Airline' },
     { value: 'scheduleDate', label: 'Flight Date' },
-    { value: 'scheduleTime', label: 'Flight Time' }
+    { value: 'scheduleTime', label: 'Flight Time' },
+    { value: 'flightName', label: 'Flight Name' }
 ];
 
 const FlightArrivalTimes = [
-    { value: '5am-12pm', label: '5:00 AM - 12:00 PM' },
-    { value: '12pm-6pm', label: '12:00 PM - 6:00 PM' },
-    { value: '6pm-12am', label: '6:00 PM - 12:00 AM' }
+    { value: '05:00', label: '5:00 AM - 6:00 AM' },
+    { value: '07:00', label: '7:00 AM - 8:00 AM' },
+    { value: '12:00', label: '12:00 PM - 3:00 PM' },
+    { value: '14:00', label: '02:00 PM - 4:00 PM' },
+    { value: '16:00', label: '04:00 PM - 5:00 PM' },
+    { value: '18:00', label: '06:00 PM - 7:00 PM' },
+    { value: '20:00', label: '08:00 PM - 10:00 PM' }
 ];
 
 const Cards = [

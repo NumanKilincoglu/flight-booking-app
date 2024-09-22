@@ -22,3 +22,17 @@ export const formatDate = (dateString) => {
         hour12: true,
     }).format(date);
 };
+
+export const formatDateGeneral = (dateString) => {
+    if (!dateString) return 'TBA';
+    const date = new Date(dateString);
+
+    return new Intl.DateTimeFormat('en-US', {
+        day:'numeric',
+        month: '2-digit',
+        year:'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+    }).format(date);
+};

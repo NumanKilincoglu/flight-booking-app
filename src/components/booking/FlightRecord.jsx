@@ -6,18 +6,19 @@ import Departure from '../../assets/images/departures.png';
 import Arrival from '../../assets/images/arrivals.png';
 import Plane from '../../assets/images/plane.png';
 import FlightService from '../../services/FlightService';
-import { calculateDuration, formatDate } from '../../utils/util.js';
+import { calculateDuration, formatDate, formatDateGeneral } from '../../utils/util.js';
 
 const FlightRecord = ({ flight }) => {
     const [detailsVisible, setDetailsVisible] = useState(false);
 
     const {
+        departureCity,
+        destinationCity,
         flightName,
         flightNumber,
         scheduleDateTime,
         actualOffBlockTime,
         expectedTimeGateOpen,
-        expectedTimeGateClosing,
         expectedTimeBoarding,
         estimatedLandingTime,
         actualLandingTime,
@@ -27,7 +28,7 @@ const FlightRecord = ({ flight }) => {
         route: { destinations },
         aircraftType,
         farePrice,
-        tripType
+        tripType,
     } = flight;
 
     const flightDuration = calculateDuration(estimatedLandingTime || expectedTimeBoarding || actualOffBlockTime, scheduleDateTime);
@@ -44,20 +45,24 @@ const FlightRecord = ({ flight }) => {
         ? new Date(estimatedLandingTime || actualLandingTime).toLocaleTimeString()
         : 'TBA';
 
+    const operatingTime = formatDateGeneral(scheduleDateTime);
     const estimatedLanding = formatDate(estimatedLandingTime || actualLandingTime) || 'TBA';
 
+    const getStopCount = () => {
+        if (!destinations || destinations.length === 0) {
+            return 'No stops';
+        }
+        return destinations.length === 1
+            ? 'Nonstop'
+            : `${destinations.length} Stops`;
+    };
+
     const bookFlight = async () => {
-        
+
         try {
 
-            const dateLimit = (expectedTimeGateClosing || expectedTimeBoarding || expectedTimeGateOpen)
-
-            if (new Date(dateLimit) < new Date()) {
-                return toast.error('Cannot book a flight that has already departed.');
-            }
-
             const response = await FlightService.bookFlight({ data: flight });
-            if (!response) return toast.error('Already booked the flight. Plase, check the My Flights page.');
+            if (!response.success) return toast.error(response.error);
             toast.success('Flight booked successfully!');
         } catch (error) {
             return toast.error('An error occurred.');
@@ -72,9 +77,9 @@ const FlightRecord = ({ flight }) => {
     return (
         <div className="flight-record">
             <div className="top-section">
-                <h4>{departureCode}</h4>
+                <h4>{departureCity}</h4>
                 <h4>-</h4>
-                <h4>{destinations[0]}</h4>
+                <h4>{destinationCity}</h4>
             </div>
             <div className="details-section">
                 <div>
@@ -82,7 +87,7 @@ const FlightRecord = ({ flight }) => {
                         <img alt="airplane" className='flight-icon' src={Departure}></img>
                         <p className='bold-text gray'>Departure</p>
                     </div>
-                    <p className='bold-text dark-gray'>{formatDate(scheduleDateTime)}</p>
+                    <p className='bolder-text dark-gray'>{formatDate(scheduleDateTime)}</p>
                     <p className='bold-text gray'>Airport: {departureCode}</p>
                 </div>
                 <div className='line-wrap'>
@@ -96,7 +101,7 @@ const FlightRecord = ({ flight }) => {
                         onError={(e) => e.target.src = ''} />
 
                     <img alt="airplane" className='flight-icon' src={Plane}></img>
-                    <p className='bold-text'>{flightDuration}</p>
+                    <p className='bold-text'>{flightDuration} ({getStopCount()})</p>
                 </div>
                 <div className='line-wrap'>
                     <div className='line'></div>
@@ -106,7 +111,7 @@ const FlightRecord = ({ flight }) => {
                         <img alt="airplane" className='flight-icon' src={Arrival}></img>
                         <p className='bold-text gray'>Arrival</p>
                     </div>
-                    <p className='bold-text dark-gray'> {estimatedLanding}</p>
+                    <p className='bolder-text dark-gray'> {estimatedLanding}</p>
                     <p className='bold-text gray'>Airport: {destinations[0]}</p>
                 </div>
             </div>
@@ -129,6 +134,11 @@ const FlightRecord = ({ flight }) => {
                             <strong className='gray-light-bold'>Landing: </strong>
                             {landingTime}
                         </p>
+                        <p className='gray bold-text'>
+                            <strong className='gray-light-bold'>Scheduled: </strong>
+                            {operatingTime}
+                        </p>
+
                     </div>
                     <div className='flight-details'>
                         <h5 className='bold-text'>Aircraft</h5>

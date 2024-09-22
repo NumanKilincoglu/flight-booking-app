@@ -30,7 +30,7 @@ const SearchFlight = ({ onSearch }) => {
           console.error('Error fetching to destinations:', error);
         }
       }
-    }, 500);
+    }, 800);
 
     fetchDestinations();
 

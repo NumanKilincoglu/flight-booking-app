@@ -35,20 +35,20 @@ export const getAirlines = async (req) => {
 
 export const bookFlight = async (req) => {
     try {
-        const response = await apiInstance.post('reservation/book', req.data);
+        const response = await apiInstance.post('booking/book', req.data);
         if (!response?.data?.success) return false
-        return response.data.success;
+        return response.data;
     } catch (error) {
         console.log(error?.response?.data?.error);
-        return false
+        return { success: false, error: error?.response?.data?.error || 'Error' }
     }
 };
 
 export const getFlights = async (req) => {
     try {
-        const response = await apiInstance.get('reservation/all', { params: req.params });
+        const response = await apiInstance.get('booking/all', { params: req.params });
         if (!response.data.success || !response?.data?.flights) return []
-        return response.data.flights;
+        return response.data;
     } catch (error) {
         console.log(error?.response?.data?.error);
         return []
@@ -57,7 +57,7 @@ export const getFlights = async (req) => {
 
 export const getAverageFarePrice = async () => {
     try {
-        const response = await apiInstance.get('reservation/average');
+        const response = await apiInstance.get('booking/average');
         if (!response.data.success) return 0
         return response.data.averageFarePrice;
     } catch (error) {

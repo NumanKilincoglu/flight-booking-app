@@ -11,6 +11,7 @@ import LoadMore from '../components/flightHistory/LoadMore';
 const FlightHistory = () => {
   const [newFlights, setFlights] = useState([]);
   const [averageFare, setAverageFare] = useState(0);
+  const [reservationount, setReservationCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ sortBy: 'farePrice', order: 'ASC', page: 1, limit: 5 });
 
@@ -25,10 +26,12 @@ const FlightHistory = () => {
         });
 
         if (filters.page === 1) {
-          setFlights(flightData);
+          setFlights(flightData?.flights || []);
         } else {
-          setFlights((prevFlights) => [...prevFlights, ...flightData]);
+          setFlights((prevFlights) => [...prevFlights, ...flightData?.flights || []]);
         }
+
+        setReservationCount(flightData?.totalReservations || 0);
 
       } catch (error) {
         console.error('Error fetching flights:', error);
@@ -67,7 +70,7 @@ const FlightHistory = () => {
     <div className="flight-history-page">
       <FilterSection />
       <div className='main-wrap'>
-        <SortSection avgFare={averageFare} sortOptions={HistorySortOptions} onSortSelect={handleSort} />
+        <SortSection avgFare={averageFare} totalReservations={reservationount} sortOptions={HistorySortOptions} onSortSelect={handleSort} />
         <div className="history-list">
           {loading && <LoadingScreen />}
           {!loading && newFlights.length > 0 &&
@@ -76,7 +79,7 @@ const FlightHistory = () => {
             ))
           }
           {!loading
-            && newFlights.length == 0
+            && newFlights.length === 0
             && (<p>No flight history available.</p>)}
         </div>
         {!loading && <LoadMore onNextPage={nextPage} />}

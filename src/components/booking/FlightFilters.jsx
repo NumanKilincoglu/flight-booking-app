@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../assets/style/FlightFilters.css';
 
-const FlightFilters = ({ sortOptions, arrivalTimes, stopsOptions, airlines, airlineLoadMore, onAirlineSelect, onSortSelect }) => {
+const FlightFilters = ({ sortOptions, arrivalTimes, stopsOptions, airlines, airlineLoadMore, onAirlineSelect, onSortSelect, onTimeSelect }) => {
 
     const handleLoadMoreAirlines = () => {
         airlineLoadMore();
@@ -15,6 +15,11 @@ const FlightFilters = ({ sortOptions, arrivalTimes, stopsOptions, airlines, airl
     const handleSortChange = (event) => {
         const selectedSort = event.target.value;
         onSortSelect(selectedSort);
+    };
+
+    const handleTimeChange = (event) => {
+        const selectedTime = event.target.value;
+        onTimeSelect(selectedTime);
     };
 
     return (
@@ -32,7 +37,7 @@ const FlightFilters = ({ sortOptions, arrivalTimes, stopsOptions, airlines, airl
             <div className="filter-section">
                 <h4>Arrival Times</h4>
                 {arrivalTimes.map(time => (
-                    <label key={time.value} className="radio-label">
+                    <label key={time.value} className="radio-label" onChange={handleTimeChange}>
                         <input type="radio" name="arrival-time" value={time.value} />
                         {time.label}
                     </label>

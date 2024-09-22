@@ -2,7 +2,7 @@ import '../../assets/style/SortSection.css';
 import React from 'react';
 import Info from '../../assets/images/info.png';
 
-const SortSection = ({ avgFare, sortOptions, onSortSelect }) => {
+const SortSection = ({ avgFare, totalReservations, sortOptions, onSortSelect }) => {
 
     const handleShowFlights = (event) => {
         const selectedOption = event.target.value.split('|');
@@ -27,8 +27,12 @@ const SortSection = ({ avgFare, sortOptions, onSortSelect }) => {
                 </div>
             </div>
             <div className="sort-right">
-                <img alt='info' className='flight-icon' src={Info}></img>
-                <span className="avg-fare">Average Fare: ${avgFare}</span>
+                <div className='f'>
+                    <img alt='info' className='flight-icon' src={Info}></img>
+                    <span className="avg-fare">Average Fare: ${avgFare}</span>
+                </div>
+                <span className="avg-fare">Booking Count: {totalReservations}</span>
+
             </div>
         </div>
     );

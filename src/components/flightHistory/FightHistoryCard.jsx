@@ -1,6 +1,6 @@
 import { React, useState } from 'react';
 import '../../assets/style/FlightHistoryCard.css';
-import { calculateDuration } from '../../utils/util.js';
+import { calculateDuration, formatDateGeneral } from '../../utils/util.js';
 
 const FlightHistoryCard = ({ flight }) => {
     const [detailsVisible, setDetailsVisible] = useState(false);
@@ -22,7 +22,6 @@ const FlightHistoryCard = ({ flight }) => {
         departureCode,
         route: { destinations },
         aircraftType,
-        scheduleDate
     } = flight;
 
     const [arrivalCode] = destinations;
@@ -48,6 +47,8 @@ const FlightHistoryCard = ({ flight }) => {
     const landingTime = estimatedLandingTime || actualLandingTime
         ? new Date(estimatedLandingTime || actualLandingTime).toLocaleTimeString()
         : 'TBA';
+
+    const operatingTime = formatDateGeneral(scheduleDateTime);
 
     const totalSlots = 5;
     const filledPackages = flight.farePackage?.length || 0;
@@ -121,7 +122,7 @@ const FlightHistoryCard = ({ flight }) => {
                         <h5 className='bold-text'>Boarding</h5>
                         <p className='gray bold-text'><strong className='gray-light-bold'>Boarding Time: </strong> {boardingTime}</p>
                         <p className='gray bold-text'><strong className='gray-light-bold'>Gate Opens: </strong> {gateOpens}</p>
-                        <p className='gray bold-text'><strong className='gray-light-bold'>Schedule: </strong> {scheduleDate}</p>
+                        <p className='gray bold-text'><strong className='gray-light-bold'>Scheduled: </strong> {operatingTime}</p>
                         <p className='gray bold-text'>
                             <strong className='gray-light-bold'>Landing: </strong>
                             {landingTime}
