@@ -151,14 +151,11 @@ input[type="date"]:focus {
   }
 
   .search-top {
-    display: flex;
-    justify-content: space-between;
     align-items: flex-start;
     flex-direction: column;
   }
 
   .date-wrap, .location-wrap {
-    display: flex;
     flex-wrap: wrap;
   }
 }

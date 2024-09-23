@@ -78,4 +78,10 @@
   .navbar-logo img {
     width: 30px;
   }
+
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+    margin: 0;
+  }
 }
