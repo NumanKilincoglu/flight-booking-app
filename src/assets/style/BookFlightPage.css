@@ -48,77 +48,27 @@
   flex: 4;
 }
 
-.spinner {
-  border: 8px solid #f3f3f3;
-  border-top: 8px solid #4c0197;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: auto;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 200px;
-  width: 250px;
-  font-size: 20px;
-  color: white;
-  font-weight: 600;
-}
-
-.loading span {
-  color: #634384;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-}
-
 @media screen and (max-width: 976px) {
   .book-flight-page {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     padding-top: 1rem;
-    height: 100%;
-    background-color: inherit;
-    padding-bottom: 5rem;
+  }
+
+  .left-section {
+    flex: 4;
+    padding: 0.5rem;
   }
 
   .right-section {
     justify-content: center;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 2rem;
-    padding: 1rem;
   }
 
   .flights-wrap {
     display: flex;
     flex-direction: column-reverse;
     justify-content: space-between;
-    gap: 1rem;
   }
 }
